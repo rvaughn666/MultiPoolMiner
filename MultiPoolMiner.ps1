@@ -679,7 +679,8 @@ while ($true) {
     #Display pool balances, formatting it to show all the user specified currencies
     if ($Config.ShowPoolBalances -or $Config.ShowPoolBalancesExcludedPools) {
         Write-Host "Pool Balances: "
-        $Balances | Format-Table -Wrap Name, "Balance *", "Value in *"
+        if ($Config.ShowPoolBalancesDetails) {$Balances | Format-Table -Wrap Name, "Balance *", "Value in *"}
+        else {$Balances | Format-Table -Wrap Name, @{Name = "Balance"; Expression = {$_.Total}}, "Value in *"}
     }
 
     #Display exchange rates
