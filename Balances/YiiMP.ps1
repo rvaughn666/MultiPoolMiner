@@ -3,11 +3,12 @@
 param(
     $Config
 )
+
 $Name = Get-Item $MyInvocation.MyCommand.Path | Select-Object -ExpandProperty BaseName
 $PoolConfig = $Config.Pools.$Name
 
 try {
-    $APICurrenciesRequest = Invoke-RestMethod "http://www.zpool.ca/api/currencies" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
+    $APICurrenciesRequest = Invoke-RestMethod "http://api.yiimp.eu/api/currencies" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
 }
 catch {
     Write-Log -Level Warn "Pool Balance API ($Name) has failed. "
@@ -19,9 +20,8 @@ if (($APICurrenciesRequest | Get-Member -MemberType NoteProperty -ErrorAction Ig
     return
 }
 
-# Guaranteed payout currencies
-$Payout_Currencies = @("BTC", "LTC", "DASH")
-$Payout_Currencies = $Payout_Currencies + @($APICurrenciesRequest | Get-Member -MemberType NoteProperty -ErrorAction Ignore | Select-Object -ExpandProperty Name) | Select-Object -Unique | Sort-Object | Where-Object {$PoolConfig.$_}
+# Payout currencies
+$Payout_Currencies = @($APICurrenciesRequest | Get-Member -MemberType NoteProperty -ErrorAction Ignore | Select-Object -ExpandProperty Name) | Select-Object -Unique | Sort-Object | Where-Object {$PoolConfig.$_}
 
 if (-not $Payout_Currencies) {
     Write-Log -Level Verbose "Cannot get balance on pool ($Name) - no wallet address specified. "
@@ -30,7 +30,7 @@ if (-not $Payout_Currencies) {
 
 $Payout_Currencies | Foreach-Object {
     try {
-        $APIWalletRequest = Invoke-RestMethod "http://zpool.ca/api/wallet?address=$($PoolConfig.$_)" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
+        $APIWalletRequest = Invoke-RestMethod "http://api.yiimp.eu/api/wallet?address=$($PoolConfig.$_)" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
         [PSCustomObject]@{
             Name        = "$($Name) ($($APIWalletRequest.currency))"
             Pool        = $Name

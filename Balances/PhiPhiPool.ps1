@@ -3,7 +3,6 @@
 param(
     $Config
 )
-
 $Name = Get-Item $MyInvocation.MyCommand.Path | Select-Object -ExpandProperty BaseName
 $PoolConfig = $Config.Pools.$Name
 
@@ -15,7 +14,7 @@ if (!$PoolConfig.BTC) {
 }
 
 try {
-    $APIWalletRequest = Invoke-RestMethod "http://www.ahashpool.com/api/wallet?address=$($PoolConfig.BTC)" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
+    $APIWalletRequest = Invoke-RestMethod "http://www.phi-phi-pool.com/api/wallet?address=$($PoolConfig.BTC)" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
 }
 catch {
     Write-Log -Level Warn "Pool Balance API ($Name) has failed. "
@@ -32,6 +31,6 @@ if (($APIWalletRequest | Get-Member -MemberType NoteProperty -ErrorAction Ignore
     Currency    = $APIWalletRequest.currency
     Balance     = $APIWalletRequest.balance
     Pending     = $APIWalletRequest.unsold
-    Total       = $APIWalletRequest.total_unpaid
+    Total       = $APIWalletRequest.unpaid
     LastUpdated = (Get-Date).ToUniversalTime()
 }

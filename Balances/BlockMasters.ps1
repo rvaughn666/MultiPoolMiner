@@ -3,11 +3,12 @@
 param(
     $Config
 )
+
 $Name = Get-Item $MyInvocation.MyCommand.Path | Select-Object -ExpandProperty BaseName
 $PoolConfig = $Config.Pools.$Name
 
 try {
-    $APICurrenciesRequest = Invoke-RestMethod "http://www.zpool.ca/api/currencies" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
+    $APICurrenciesRequest = Invoke-RestMethod "http://blockmasters.co/api/currencies" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
 }
 catch {
     Write-Log -Level Warn "Pool Balance API ($Name) has failed. "
@@ -30,7 +31,7 @@ if (-not $Payout_Currencies) {
 
 $Payout_Currencies | Foreach-Object {
     try {
-        $APIWalletRequest = Invoke-RestMethod "http://zpool.ca/api/wallet?address=$($PoolConfig.$_)" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
+        $APIWalletRequest = Invoke-RestMethod "http://blockmasters.co/api/wallet?address=$($PoolConfig.BTC)" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
         [PSCustomObject]@{
             Name        = "$($Name) ($($APIWalletRequest.currency))"
             Pool        = $Name
