@@ -7,7 +7,7 @@
 
 ###### Licensed under the GNU General Public License v3.0 - Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights. https://github.com/MultiPoolMiner/MultiPoolMiner/blob/master/LICENSE
 
-README.md is based on README.txt - updated on 08/07/2018 (dd/mm/yyyy) - latest version can be found here: https://github.com/MultiPoolMiner/MultiPoolMiner/blob/master/README.txt
+README.md is based on README.txt - updated on 08/08/2018 (dd/mm/yyyy) - latest version can be found here: https://github.com/MultiPoolMiner/MultiPoolMiner/blob/master/README.txt
 
 
 
@@ -191,15 +191,16 @@ By default MPM will perform an automatic update on startup if a newer version is
 By default MPM hides most miner windows as to not steal focus (Miners of API type 'Wrapper' will remain hidden). All miners write their output to files in the Log folder. Set to 'true' to show miner windows.
 
 **-UseFastestMinerPerAlgoOnly**
-Use only use fastest miner per algo and device index. E.g. if there are 2 or more miners available to mine the same algo, only the fastest will ever be used, the slower ones will also be hidden in the summary screen.
+Use only use fastest miner per algo and device index. E.g. if there are 2 or more miners available to mine the same algo, only the fastest will ever be used, the slower ones will also be hidden in the summary screen.  Set to 'true' to enable this feature.
 
 **-ShowPoolBalances**
-Display the balances of all enabled pools (excluding those that are excluded with 'ExcludeMinerName') on the summary screen and in the web GUI.
-Note: Only balances in BTC are listed, other currencies are currently not supported.
+Display the balances of all enabled pools (excluding those that are excluded with 'ExcludeMinerName') on the summary screen and in the web GUI. Set to 'true' to list the additional information. 
 
 **-ShowPoolBalancesExcludedPools**
-Display the balances of all pools (including those that are excluded with 'ExcludeMinerName') on the summary screen and in the web GUI.
-Note: Only balances in BTC are listed, other currencies are currently not supported.
+Display the balances of all pools (including those that are excluded with 'ExcludeMinerName') on the summary screen and in the web GUI. Set to 'true' to list the additional information. 
+
+**-ShowPoolBalancesDetails**
+Display extra balances details (total of each currency) on the summary screen. Set to 'true' to list the additional information. 
 
 **-ConfigFile [Path\ConfigFile.txt]**
 The default config file name is '.\default.txt'
@@ -284,6 +285,7 @@ Warning: The JSON file structure is very fragile - every comma counts, so be car
     "IgnoreCosts":  "$IgnoreCosts",
     "ShowPoolBalances":  "$ShowPoolBalances",
     "ShowPoolBalancesExcludedPools":  "$ShowPoolBalancesExcludedPools",
+    "ShowPoolBalancesDetails":  "$ShowPoolBalancesDetails",
     "Pools":  {
 
               },
