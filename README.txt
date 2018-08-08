@@ -362,7 +362,7 @@ Note: Showing the miner windows disables writing the miner output to log files. 
 
 Pool Balances
 
-MPM can gather the pending balances at all configured pools.MPM can gather the pending BTC balances from all configured pools.
+MPM can gather the pending balances at all configured pools.MPM can gather the pending balances from all configured pools.
 
 To display the balances of all enabled pools (excluding those that are excluded with 'ExcludeMinerName') on the summary screen and in the web GUI add '"ShowPoolBalances":  true' to the general section:
 {
@@ -378,7 +378,7 @@ To display the balances of all pools (including those that are excluded with 'Ex
     ...
 }
 
-To include the sums of all currencies in the balances (depending on 'ShowPoolBalancesExcludedPools' including those that are excluded with 'ExcludeMinerName') on the summary screen add '"ShowPoolBalancesDetails":  true' to the general section:
+To display the individual sums of all currencies in the balances (depending on 'ShowPoolBalancesExcludedPools' including those that are excluded with 'ExcludeMinerName') on the summary screen add '"ShowPoolBalancesDetails":  true' to the general section:
 {
     ...
 	"ShowPoolBalancesDetails":  true
