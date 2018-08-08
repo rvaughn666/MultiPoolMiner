@@ -371,13 +371,20 @@ To display the balances of all enabled pools (excluding those that are excluded 
     ...
 }
 	
-To display the balances of all pools (including those that are excluded with 'ExcludeMinerName') on the summary screen and in the web GUI '"ShowPoolBalances":  true' to the general section:
+To display the balances of all pools (including those that are excluded with 'ExcludeMinerName') on the summary screen and in the web GUI add '"ShowPoolBalancesExcludedPools":  true' to the general section:
 {
     ...
 	"ShowPoolBalancesExcludedPools":  true
     ...
 }
-Note: Only balances in BTC are listed, other currencies are currently not supported.
+
+To include the sums of all currencies in the balances (depending on 'ShowPoolBalancesExcludedPools' including those that are excluded with 'ExcludeMinerName') on the summary screen add '"ShowPoolBalancesDetails":  true' to the general section:
+{
+    ...
+	"ShowPoolBalancesDetails":  true
+    ...
+}
+
 
 
 ====================================================================
