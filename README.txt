@@ -378,7 +378,7 @@ To display the balances of all pools (including those that are excluded with 'Ex
     ...
 }
 
-To display the individual sums of all currencies in the balances (depending on 'ShowPoolBalancesExcludedPools' including those that are excluded with 'ExcludeMinerName') on the summary screen add '"ShowPoolBalancesDetails":  true' to the general section:
+To display the sum of each currency in the balances (depending on 'ShowPoolBalancesExcludedPools' including those that are excluded with 'ExcludeMinerName') on the summary screen add '"ShowPoolBalancesDetails":  true' to the general section:
 {
     ...
 	"ShowPoolBalancesDetails":  true
