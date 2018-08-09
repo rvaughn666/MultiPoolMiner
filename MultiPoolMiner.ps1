@@ -259,7 +259,7 @@ while ($true) {
     #Update the pool balances
     if ($Config.ShowPoolBalances -or $Config.ShowPoolBalancesExcludedPools) {
         Write-Log "Getting pool balances. "
-        $Balances = Get-Balance -Config $UserConfig -Rates $Rates
+        $Balances = Get-Balance -Config $UserConfig -NewRates $NewRates
 
         #Give API access to the pool balances
         $API.Balances = $Balances
@@ -683,8 +683,8 @@ while ($true) {
         else {$Balances | Format-Table -Wrap Name, @{Name = "Balance"; Expression = {$_.Total}}, "Value in *"}
     }
 
-    #Display exchange rates
-    if ($Config.Currency | Where-Object {$_ -ne "BTC" -and $NewRates.$_}) {Write-Host "Exchange rates: 1 BTC = $(($Config.Currency | Where-Object {$_ -ne "BTC" -and $NewRates.$_} | ForEach-Object { "$($_) $($NewRates.$_)"})  -join ' = ')"}
+    #Display exchange rates, get decimal places from $NewRates
+    if ($Config.Currency | Where-Object {$_ -ne "BTC" -and $NewRates.$_}) {Write-Host "Exchange rates: 1 BTC = $(($Config.Currency | Where-Object {$_ -ne "BTC" -and $NewRates.$_} | ForEach-Object {$Digits = ($($NewRates.$_).ToString().Split(".")[1]).length; "$_ " + ("{0:N$($Digits)}" -f [Float]$NewRates.$_)}) -join " = ")"}
 
     #Give API access to WatchdogTimers information
     $API.WatchdogTimers = $WatchdogTimers
