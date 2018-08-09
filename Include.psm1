@@ -28,15 +28,12 @@ function Get-Balance {
     $Rates.PSObject.Properties.Name | ForEach-Object {
         $Currency = $_
         $Balances | Foreach-Object {
-            if ($Currency -eq $_.Currency) {
-                $_ | Add-Member "Balance ($Currency)" ("{0:N8}" -f ([Float]$($_.Total)))
-            }
-            else {
-                $_ | Add-Member "Balance ($Currency)" ""
-            }
             $_.Total = ("{0:N8}" -f ([Float]$($_.Total)))
+            if ($Currency -eq $_.Currency) {
+                $_ | Add-Member "Balance ($Currency)" $_.Total
+            }
         }
-        if (($Balances."Balance ($Currency)" | Measure-Object -Sum).sum) {$Totals | Add-Member "Balance ($Currency)" ("{0:N8}" -f ([Double]$($Balances."Balance ($Currency)" | Measure-Object -Sum).sum))}
+        if (($Balances."Balance ($Currency)" | Measure-Object -Sum).sum) {$Totals | Add-Member "Balance ($Currency)" ("{0:N8}" -f ([Float]$($Balances."Balance ($Currency)" | Measure-Object -Sum).sum))}
     }
 
     #Add converted values
@@ -45,9 +42,9 @@ function Get-Balance {
         #Get number of digits from $NewRates
         if ($NewRates.$Currency -ne $null) {$Digits = ($($NewRates.$Currency).ToString().Split(".")[1]).length}else {$Digits = 8}
         $Balances | Foreach-Object {
-            $_ | Add-Member "Value in $Currency" ("{0:N$($Digits)}" -f ([Float]$_.Total * [Float]$Rates.$($_.Currency).$Currency))
+            $_ | Add-Member "Value in $Currency" $(if ($Rates.$($_.Currency).$Currency) {("{0:N$($Digits)}" -f ([Float]$_.Total * [Float]$Rates.$($_.Currency).$Currency))}else {"unknown"}) -Force
         }
-        if (($Balances."Value in $Currency" | Measure-Object -Sum).sum)  {$Totals | Add-Member "Value in $Currency" ("{0:N$($Digits)}" -f ($Balances."Value in $Currency" | Measure-Object -Sum).sum)}
+        if (($Balances."Value in $Currency" | Measure-Object -Sum -ErrorAction Ignore).sum)  {$Totals | Add-Member "Value in $Currency" ("{0:N$($Digits)}" -f ([Float]$($Balances."Value in $Currency" | Measure-Object -Sum -ErrorAction Ignore).sum)) -Force}
     }
     $Balances += $Totals
     
