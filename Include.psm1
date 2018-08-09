@@ -17,6 +17,7 @@ function Get-Balance {
     }
     catch {
         Write-Log -Level Warn "Pool API (CryptoCompare) has failed - cannot convert balances to other currencies. "
+        Return $Balances
     }
 
     #Add total of totals
