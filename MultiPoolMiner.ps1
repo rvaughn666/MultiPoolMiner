@@ -679,8 +679,17 @@ while ($true) {
     #Display pool balances, formatting it to show all the user specified currencies
     if ($Config.ShowPoolBalances -or $Config.ShowPoolBalancesExcludedPools) {
         Write-Host "Pool Balances: "
-        if ($Config.ShowPoolBalancesDetails) {$Balances | Format-Table -Wrap Name, "Balance *", "Value in *"}
-        else {$Balances | Format-Table -Wrap Name, @{Name = "Balance"; Expression = {$_.Total}}, "Value in *"}
+        $Columns = @()
+        $ColumnFormat = [Array]@{Name = "Name"; Expression = "Name"}
+        if ($Config.ShowPoolBalancesDetails) {
+            $Columns += $Balances | Foreach-Object {$_ | Get-Member -MemberType NoteProperty -ErrorAction Ignore | Select-Object -ExpandProperty Name} | Where-Object {$_ -like "Balance (*"} | Sort-Object -Unique
+        }
+        else {
+            $ColumnFormat += @{Name = "Balance"; Expression = {$_.Total}}
+        }
+        $Columns += $Balances | Foreach-Object {$_ | Get-Member -MemberType NoteProperty -ErrorAction Ignore | Select-Object -ExpandProperty Name} | Where-Object {$_ -like "Value in *"} | Sort-Object -Unique
+        $ColumnFormat += $Columns | Foreach-Object {@{Name = "$_"; Expression = "$_"; Align = "right"}}
+        $Balances | Format-Table -Wrap -Property $ColumnFormat
     }
 
     #Display exchange rates, get decimal places from $NewRates
