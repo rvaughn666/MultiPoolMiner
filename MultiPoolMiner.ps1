@@ -682,18 +682,27 @@ while ($true) {
         $Columns = @()
         $ColumnFormat = [Array]@{Name = "Name"; Expression = "Name"}
         if ($Config.ShowPoolBalancesDetails) {
-            $Columns += $Balances | Foreach-Object {$_ | Get-Member -MemberType NoteProperty -ErrorAction Ignore | Select-Object -ExpandProperty Name} | Where-Object {$_ -like "Balance (*"} | Sort-Object -Unique
+            $Columns += $BalancesData.Balances | Foreach-Object {$_ | Get-Member -MemberType NoteProperty -ErrorAction Ignore | Select-Object -ExpandProperty Name} | Where-Object {$_ -like "Balance (*"} | Sort-Object -Unique
         }
         else {
             $ColumnFormat += @{Name = "Balance"; Expression = {$_.Total}}
         }
-        $Columns += $Balances | Foreach-Object {$_ | Get-Member -MemberType NoteProperty -ErrorAction Ignore | Select-Object -ExpandProperty Name} | Where-Object {$_ -like "Value in *"} | Sort-Object -Unique
+        $Columns += $BalancesData.Balances | Foreach-Object {$_ | Get-Member -MemberType NoteProperty -ErrorAction Ignore | Select-Object -ExpandProperty Name} | Where-Object {$_ -like "Value in *"} | Sort-Object -Unique
         $ColumnFormat += $Columns | Foreach-Object {@{Name = "$_"; Expression = "$_"; Align = "right"}}
-        $Balances | Format-Table -Wrap -Property $ColumnFormat
+        $BalancesData.Balances | Format-Table -Wrap -Property $ColumnFormat
     }
 
     #Display exchange rates, get decimal places from $NewRates
-    if ($Config.Currency | Where-Object {$_ -ne "BTC" -and $NewRates.$_}) {Write-Host "Exchange rates: 1 BTC = $(($Config.Currency | Where-Object {$_ -ne "BTC" -and $NewRates.$_} | ForEach-Object {$Digits = ($($NewRates.$_).ToString().Split(".")[1]).length; "$_ " + ("{0:N$($Digits)}" -f [Float]$NewRates.$_)}) -join " = ")"}
+    if (($Config.ShowPoolBalances -or $Config.ShowPoolBalancesExcludedPools) -and $Config.ShowPoolBalancesDetails -and $BalancesData.Rates) {
+        Write-Host "Exchange rates:"
+        $BalancesData.Rates.PSObject.Properties.Name | ForEach-Object {
+            $BalanceCurrency = $_
+            Write-Host "1 $BalanceCurrency = $(($BalancesData.Rates.$_.PSObject.Properties.Name| Where-Object {$_ -ne $BalanceCurrency} | Sort-Object | ForEach-Object {$Digits = ($($NewRates.$_).ToString().Split(".")[1]).length; "$_ " + ("{0:N$($Digits)}" -f [Float]$BalancesData.Rates.$BalanceCurrency.$_)}) -join " = ")"
+        }
+    }
+    else {
+        if ($Config.Currency | Where-Object {$_ -ne "BTC" -and $NewRates.$_}) {Write-Host "Exchange rates: 1 BTC = $(($Config.Currency | Where-Object {$_ -ne "BTC" -and $NewRates.$_} | ForEach-Object {$Digits = ($($NewRates.$_).ToString().Split(".")[1]).length; "$_ " + ("{0:N$($Digits)}" -f [Float]$NewRates.$_)}) -join " = ")"}
+    }
 
     #Give API access to WatchdogTimers information
     $API.WatchdogTimers = $WatchdogTimers

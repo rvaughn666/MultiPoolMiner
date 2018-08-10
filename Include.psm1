@@ -6,6 +6,8 @@ function Get-Balance {
     [CmdletBinding()]
     param($Config, $NewRates)
 
+    $Data = [PSCustomObject]@{}
+    
     $Balances = @(Get-ChildItem "Balances" -File | Where-Object {$Config.Pools.$($_.BaseName) -and ($Config.ExcludePoolName -inotcontains $_.BaseName -or $Config.ShowPoolBalancesExcludedPools)} | ForEach-Object {
         Get-ChildItemContent "Balances\$($_.Name)" -Parameters @{Config = $Config}
     } | Foreach-Object {$_.Content | Add-Member Name $_.Name -PassThru -Force} | Sort-Object Name)
@@ -28,12 +30,13 @@ function Get-Balance {
     $Rates.PSObject.Properties.Name | ForEach-Object {
         $Currency = $_
         $Balances | Foreach-Object {
-            $_.Total = ("{0:N8}" -f ([Float]$($_.Total)))
+            if ($NewRates.$Currency -ne $null) {$Digits = ($($NewRates.$Currency).ToString().Split(".")[1]).length}else {$Digits = 8}
+            $_.Total = ("{0:N$($Digits)}" -f ([Float]$($_.Total)))
             if ($Currency -eq $_.Currency) {
                 $_ | Add-Member "Balance ($Currency)" $_.Total
             }
         }
-        if (($Balances."Balance ($Currency)" | Measure-Object -Sum).sum) {$Totals | Add-Member "Balance ($Currency)" ("{0:N8}" -f ([Float]$($Balances."Balance ($Currency)" | Measure-Object -Sum).sum))}
+        if (($Balances."Balance ($Currency)" | Measure-Object -Sum).sum) {$Totals | Add-Member "Balance ($Currency)" ("{0:N$($Digits)}" -f ([Float]$($Balances."Balance ($Currency)" | Measure-Object -Sum).sum))}
     }
 
     #Add converted values
@@ -48,7 +51,10 @@ function Get-Balance {
     }
     $Balances += $Totals
     
-    Return $Balances
+    $Data | Add-Member Balances $Balances
+    $Data | Add-Member Rates $Rates
+
+    Return $Data
 }
 
 function Write-Log {
