@@ -7,6 +7,9 @@ param(
 $Name = Get-Item $MyInvocation.MyCommand.Path | Select-Object -ExpandProperty BaseName
 $PoolConfig = $Config.Pools.$Name
 
+$APICurrenciesRequest = [PSCustomObject]@{}
+$APIWalletRequest = [PSCustomObject]@{}
+
 try {
     $APICurrenciesRequest = Invoke-RestMethod "http://blockmasters.co/api/currencies" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
 }

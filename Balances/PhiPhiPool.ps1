@@ -6,12 +6,12 @@ param(
 $Name = Get-Item $MyInvocation.MyCommand.Path | Select-Object -ExpandProperty BaseName
 $PoolConfig = $Config.Pools.$Name
 
-$APIWalletRequest = [PSCustomObject]@{}
-
 if (!$PoolConfig.BTC) {
     Write-Log -Level Verbose "Cannot get balance on pool ($Name) - no wallet address specified. "
     return
 }
+
+$APIWalletRequest = [PSCustomObject]@{}
 
 try {
     $APIWalletRequest = Invoke-RestMethod "http://www.phi-phi-pool.com/api/wallet?address=$($PoolConfig.BTC)" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop

@@ -7,6 +7,9 @@ param(
 $Name = Get-Item $MyInvocation.MyCommand.Path | Select-Object -ExpandProperty BaseName
 $PoolConfig = $Config.Pools.$Name
 
+$APICurrenciesRequest = [PSCustomObject]@{}
+$APIWalletRequest = [PSCustomObject]@{}
+
 try {
     $APICurrenciesRequest = Invoke-RestMethod "http://api.zergpool.com:8080/api/currencies" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
 }

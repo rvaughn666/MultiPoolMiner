@@ -7,12 +7,12 @@ param(
 $Name = Get-Item $MyInvocation.MyCommand.Path | Select-Object -ExpandProperty BaseName
 $PoolConfig = $Config.Pools.$Name
 
-$Request = [PSCustomObject]@{}
-
 if (!$PoolConfig.BTC) {
     Write-Log -Level Verbose "Cannot get balance on pool ($Name) - no wallet address specified. "
     return
 }
+
+$Request = [PSCustomObject]@{}
 
 try {
     #NH API does not total all of your balances for each algo up, so you have to do it with another call then total them manually.
