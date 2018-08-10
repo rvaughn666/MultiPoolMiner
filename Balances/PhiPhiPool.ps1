@@ -18,6 +18,7 @@ try {
 }
 catch {
     Write-Log -Level Warn "Pool Balance API ($Name) has failed. "
+    return
 }
 
 if (($APIWalletRequest | Get-Member -MemberType NoteProperty -ErrorAction Ignore | Measure-Object Name).Count -le 1) {

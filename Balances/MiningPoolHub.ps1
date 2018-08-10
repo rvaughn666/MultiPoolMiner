@@ -19,6 +19,7 @@ try {
 }
 catch {
     Write-Warning "Pool Balance API ($Name) has failed. "
+    return
 }
 
 if (($Request.getuserallbalances.data | Get-Member -MemberType NoteProperty -ErrorAction Ignore | Measure-Object Name).Count -le 1) {

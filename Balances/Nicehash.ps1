@@ -23,6 +23,7 @@ try {
 }
 catch {
     Write-Log -Level Warn "Pool Balance API ($Name) has failed. "
+    return
 }
 
 [PSCustomObject]@{

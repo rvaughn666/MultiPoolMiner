@@ -32,38 +32,22 @@ if (-not $Payout_Currencies) {
 $Payout_Currencies | Foreach-Object {
     try {
         $APIWalletRequest = Invoke-RestMethod "http://zerg.zergpool.com/api/wallet?address=$($PoolConfig.$_)" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
-        [PSCustomObject]@{
-            Name        = "$($Name) ($($APIWalletRequest.currency))"
-            Pool        = $Name
-            Currency    = $APIWalletRequest.currency
-            Balance     = $APIWalletRequest.balance
-            Pending     = $APIWalletRequest.unsold
-            Total       = $APIWalletRequest.unpaid
-            LastUpdated = (Get-Date).ToUniversalTime()
+        if (($APIWalletRequest | Get-Member -MemberType NoteProperty -ErrorAction Ignore | Measure-Object Name).Count -le 1) {
+            Write-Log -Level Warn "Pool Balance API ($Name) for $_ returned nothing. "
         }
-#        [PSCustomObject]@{
-#            Name        = "$($Name) (DASH)"
-#            Currency    = "DASH"
-#            Balance     = 0.00234267
-#            Pending     = 0.00234267
-#            Total       = 0.00234267
-#            LastUpdated = (Get-Date).ToUniversalTime()
-#        }
-#        [PSCustomObject]@{
-#            Name        = "$($Name) (LTC)"
-#            Currency    = "LTC"
-#            Balance     = 0.0072294
-#            Pending     = 0.0072294
-#            Total       = 0.0072294
-#            LastUpdated = (Get-Date).ToUniversalTime()
-#        }
+        else {
+            [PSCustomObject]@{
+                Name        = "$($Name) ($($APIWalletRequest.currency))"
+                Pool        = $Name
+                Currency    = $APIWalletRequest.currency
+                Balance     = $APIWalletRequest.balance
+                Pending     = $APIWalletRequest.unsold
+                Total       = $APIWalletRequest.unpaid
+                LastUpdated = (Get-Date).ToUniversalTime()
+            }
+        }
     }
     catch {
-        Write-Log -Level Warn "Pool Balance API ($Name) has failed. "
-    }
-
-    if (($APIWalletRequest | Get-Member -MemberType NoteProperty -ErrorAction Ignore | Measure-Object Name).Count -le 1) {
-        Write-Log -Level Warn "Pool Balance API ($Name) for $_ returned nothing. "
-        return
+        Write-Log -Level Warn "Pool Balance API ($Name) for $_ has failed. "
     }
 }
