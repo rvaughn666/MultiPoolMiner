@@ -369,7 +369,8 @@ To display the balances of all enabled pools (excluding those that are excluded 
 to the general section:
 {
     ...
-	"ShowPoolBalances":  true
+    "SwitchingPrevention":  "$SwitchingPrevention",
+    "ShowPoolBalances":  true,
     ...
 }
 	
@@ -378,7 +379,8 @@ To display the sum of each currency in the balances (depending on 'ShowPoolBalan
 to the general section:
 {
     ...
-    "ShowPoolBalancesDetails": true
+    "SwitchingPrevention":  "$SwitchingPrevention",
+    "ShowPoolBalancesDetails": true,
     ...
 }
 
@@ -387,7 +389,8 @@ To display the balances of all pools (including those that are excluded with 'Ex
 to the general section:
 {
     ...
-	"ShowPoolBalancesExcludedPools":  true
+    "SwitchingPrevention":  "$SwitchingPrevention",
+    "ShowPoolBalancesExcludedPools":  true,
     ...
 }
 
