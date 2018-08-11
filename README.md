@@ -166,9 +166,6 @@ Specify your proxy address if applicable, i.e http://192.0.0.1:8080
 **-Region [Europe/US/Asia]**
 Choose your region or the region closest to you.
 
-**-SSL**
-Specifying the -ssl command (without a boolean value of true or false) will restrict the miner application list to include only the miners that support secure connection.
-
 **-ShowMinerWindow**
 By default MPM hides most miner windows as to not steal focus (Miners of API type 'Wrapper' will remain hidden). All miners write their output to files in the Log folder. Set to 'true' to show miner windows.
 
@@ -180,6 +177,9 @@ Display extra balances details (total of each currency) and the exchange rates f
 
 **-ShowPoolBalancesExcludedPools**
 Display the balances of all pools (including those that are excluded with 'ExcludeMinerName') on the summary screen and in the web GUI.
+
+**-SSL**
+Specifying the -ssl command (without a boolean value of true or false) will restrict the miner application list to include only the miners that support secure connection.
 
 **-SwitchingPrevention**
 Since version 2.6, the delta value (integer) that was used to determine how often MultiPoolMiner is allowed to switch, is now user-configurable on a scale of 1 to infinity on an intensity basis. Default is 1 (Start.bat default is 2). Recommended values are 1-10 where 1 means the most frequent switching and 10 means the least switching. Please note setting this value to zero (0) will not turn this function off! Please see further explanation in MULTIPOOLMINER'S LOGIC section below. 
@@ -305,22 +305,22 @@ If a pool allows payout in another currency than BTC you can change this.
 Note: Not all pools support this, for more information consult the pools web page
 
 For each pool you can statically add a section similar to this (see http://localhost:3999/config):
-
+```
     "Zpool": {
         "BTC": "$Wallet",
         "Worker": "$WorkerName"
     }
-
+```
 The payout currency is defined by this line:
 "BTC": "$Wallet", (MPM will use the the wallet address from the start.bat file)
 
 E.g. to change the payout currency for Zpool to LiteCoin replace the line for BTC with "LTC": "<YOUR_LITECOIN_ADDRESS>", (of course you need to insert a real LTC address)
-
+```
     "Zpool": {
         "LTC": "<YOUR_LITECOIN_ADDRESS>",
         "Worker": "$WorkerName"
     }
-
+```
 
 
 ### Advanced configuration for Miners
@@ -337,38 +337,45 @@ Settings in this section affect the overall behaviour of MPM.
 By default MPM hides most miner windows as to not steal focus . All miners write their output to files in the Log folder.
 
 To show the miner windows add _'"ShowMinerWindow":  true'_ to the general section:
-
+```
 {
     ...
     "SwitchingPrevention":  "$SwitchingPrevention",
     "ShowMinerWindow":  true,
     ...
 }
+```
 Note: Showing the miner windows disables writing the miner output to log files. Miners of API type 'Wrapper' will remain hidden.
 
 #### Pool Balances
 
 
 To display the balances of all enabled pools (excluding those that are excluded with 'ExcludeMinerName') on the summary screen and in the web GUI add _'"ShowPoolBalances":  true'_ to the general section:
+```
 {
     ...
 	"ShowPoolBalances":  true
     ...
 }
-	
+```
+
 To display the sum of each currency in the balances (depending on 'ShowPoolBalancesExcludedPools' including those that are excluded with 'ExcludeMinerName') and the exchange rates for all currencies on the summary screen add _'"ShowPoolBalancesDetails": true'_ to the general section:
+```
 {
     ...
     "ShowPoolBalancesDetails": true
     ...
 }
+```
 
 To display the balances of all pools (including those that are excluded with 'ExcludeMinerName') on the summary screen and in the web GUI add _'"ShowPoolBalances":  true'_ to the general section:
+```
 {
     ...
 	"ShowPoolBalancesExcludedPools":  true
     ...
 }
+```
 
 
 
