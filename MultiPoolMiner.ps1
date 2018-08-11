@@ -262,7 +262,7 @@ while ($true) {
         $BalancesData = Get-Balance -Config $UserConfig -NewRates $NewRates
 
         #Give API access to the pool balances
-        $API.BalancesData = $Balances
+        $API.Balances = $BalancesData.Balances
     }
 
     #Load information about the devices
