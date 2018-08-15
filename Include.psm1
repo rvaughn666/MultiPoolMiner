@@ -28,7 +28,7 @@ function Get-Balance {
     }
     #Add Balance (in currency)
     $Rates.PSObject.Properties.Name | ForEach-Object {
-        $Currency = $_
+        $Currency = $_.ToUpper()
         $Balances | Foreach-Object {
             if ($NewRates.$Currency -ne $null) {$Digits = ($($NewRates.$Currency).ToString().Split(".")[1]).length}else {$Digits = 8}
             $_.Total = ("{0:N$($Digits)}" -f ([Float]$($_.Total)))
@@ -41,7 +41,7 @@ function Get-Balance {
 
     #Add converted values
     $Config.Currency | ForEach-Object {
-        $Currency = $_
+        $Currency = $_.ToUpper()
         #Get number of digits from $NewRates
         if ($NewRates.$Currency -ne $null) {$Digits = ($($NewRates.$Currency).ToString().Split(".")[1]).length}else {$Digits = 8}
         $Balances | Foreach-Object {
